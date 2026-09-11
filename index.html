@@ -436,31 +436,16 @@
             }, 1200);
         }
 
-        // ======================== FUNKCE - NÁHODNÁ POZICE (VYHÝBÁ SE STŘEDU) ========================
+        // ======================== FUNKCE - NÁHODNÁ POZICE ========================
         function getRandomPosition() {
-            const photoSize = Math.max(window.innerWidth * 0.45, 120); // Max velikost fotky
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            // Responsivní excludeRadius - na mobilu menší, na desktopu větší
-            const excludeRadius = Math.max(Math.min(window.innerWidth, window.innerHeight) * 0.3, 150);
+            const padding = 20;
+            const photoSize = Math.max(window.innerWidth * 0.45, 120);
             
-            let randomX, randomY, distance;
+            const maxX = Math.max(window.innerWidth - photoSize - padding, 0);
+            const maxY = Math.max(window.innerHeight - photoSize - padding, 0);
             
-            // Opakovat, dokud se fotka nevygeneruje mimo střed
-            do {
-                const padding = Math.max(photoSize / 2, 30);
-                const maxX = Math.max(window.innerWidth - photoSize, 0);
-                const maxY = Math.max(window.innerHeight - photoSize, 0);
-                
-                randomX = Math.random() * maxX + padding / 2;
-                randomY = Math.random() * maxY + padding / 2;
-                
-                // Vzdálenost od středu
-                distance = Math.sqrt(
-                    Math.pow(randomX - centerX, 2) + 
-                    Math.pow(randomY - centerY, 2)
-                );
-            } while (distance < excludeRadius); // Opakuj, pokud je příliš blízko středu
+            const randomX = Math.random() * maxX + padding;
+            const randomY = Math.random() * maxY + padding;
             
             return { x: randomX, y: randomY };
         }
