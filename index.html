@@ -468,14 +468,25 @@
             img.alt = 'Naše fotka';
             img.style.setProperty('--rotation', rotation + 'deg');
             
+            // Debug log
+            console.log('📸 Fotka se vytváří:', img.src, 'Rotace:', rotation);
+            
             // Ošetření chyby - pokud fotka neexistuje
             img.onerror = function() {
+                console.error('❌ Chyba při načítání fotky:', img.src);
                 photoDiv.remove();
+            };
+            
+            img.onload = function() {
+                console.log('✅ Fotka se úspěšně načetla:', img.src);
             };
             
             const pos = getRandomPosition();
             photoDiv.style.left = pos.x + 'px';
             photoDiv.style.top = pos.y + 'px';
+            photoDiv.style.position = 'fixed';
+            
+            console.log('📍 Pozice fotky:', pos);
             
             photoDiv.appendChild(img);
             document.body.appendChild(photoDiv);
