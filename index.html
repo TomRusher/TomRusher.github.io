@@ -100,6 +100,14 @@
             transform: translate(-50%, -50%) scale(0.98);
         }
 
+        /* Odstranit modrý blink na Androidu */
+        .envelope-button {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
         /* ======================== FÁZE 2: PAPÍR S VZKAZEM ======================== */
         .letter-paper {
             position: absolute;
@@ -366,7 +374,7 @@
         // ======================== POLE FOTEK - AUTOMATICKÉ NAPLNĚNÍ ========================
         const photoArray = [];
         for (let i = 1; i <= 15; i++) {
-            photoArray.push(`images/foto${i}.jpeg`);
+            photoArray.push(`images/photo${i}.jpg`);
         }
 
         // ======================== TEXTY TLAČÍTKA ========================
@@ -433,7 +441,8 @@
             const photoSize = Math.max(window.innerWidth * 0.45, 120); // Max velikost fotky
             const centerX = window.innerWidth / 2;
             const centerY = window.innerHeight / 2;
-            const excludeRadius = 400; // Poloměr, kde se fotky nehledají (střed obrazovky)
+            // Responsivní excludeRadius - na mobilu menší, na desktopu větší
+            const excludeRadius = Math.max(Math.min(window.innerWidth, window.innerHeight) * 0.3, 150);
             
             let randomX, randomY, distance;
             
