@@ -3,41 +3,594 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Testovací web | GurtDev</title>
+    <title>Romantické Narozeninové Překvapení 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ======================== RESET A ZÁKLADNÍ STYLY ======================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
-            font-family: system-ui, -apple-system, sans-serif;
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #fff5f7 0%, #f0e6ff 100%);
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f3f4f6;
-            color: #1f2937;
+            min-height: 100vh;
+            padding: 1rem;
         }
+
+        /* ======================== KONTEJNER - ABSOLUTNÍ POZICOVÁNÍ ======================== */
         .container {
-            background: white;
-            padding: 3rem 4rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ======================== FÁZE 1: OBÁLKA ======================== */
+        .envelope-wrapper {
+            position: relative;
+            z-index: 10;
+            width: clamp(200px, 80vw, 350px);
+            height: clamp(150px, 60vw, 260px);
+            cursor: pointer;
+            animation: slideInEnvelope 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* SVG obálka */
+        .envelope-wrapper svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 8px 16px rgba(255, 105, 180, 0.2));
+            transition: all 0.3s ease;
+        }
+
+        .envelope-wrapper:hover svg {
+            filter: drop-shadow(0 12px 24px rgba(255, 105, 180, 0.4));
+            transform: scale(1.02);
+        }
+
+        /* Když se obálka otevře */
+        .envelope-wrapper.opened {
+            animation: fadeOutEnvelope 0.8s ease-out forwards;
+            animation-delay: 0.8s;
+            pointer-events: none;
+        }
+
+        /* Tlačítko na obálce */
+        .envelope-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 182, 193, 0.95);
+            border: 2px solid #ff69b4;
+            color: #d63384;
+            padding: 0.75rem 1.5rem;
+            font-size: clamp(0.8rem, 3vw, 1rem);
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            font-family: 'Quicksand', sans-serif;
+            box-shadow: 0 4px 12px rgba(255, 105, 180, 0.3);
+            white-space: nowrap;
+        }
+
+        .envelope-button:hover {
+            background: rgba(255, 192, 203, 1);
+            transform: translate(-50%, -50%) scale(1.05);
+            box-shadow: 0 6px 16px rgba(255, 105, 180, 0.5);
+        }
+
+        .envelope-button:active {
+            transform: translate(-50%, -50%) scale(0.98);
+        }
+
+        /* ======================== FÁZE 2: PAPÍR S VZKAZEM ======================== */
+        .letter-paper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            opacity: 0;
+            pointer-events: none;
+            width: clamp(280px, 85vw, 500px);
+            max-width: 500px;
+        }
+
+        .letter-paper.visible {
+            opacity: 1;
+            pointer-events: auto;
+            animation: slideUpLetter 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation-delay: 0.3s;
+        }
+
+        .letter-content {
+            background: linear-gradient(135deg, #fefbf8 0%, #fffbfe 100%);
+            padding: clamp(1.5rem, 6vw, 2.5rem);
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 
+                0 15px 40px rgba(255, 105, 180, 0.2),
+                0 0 0 1px rgba(255, 105, 180, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            
+            /* Papírový efekt s tečkovanými linkami */
+            background-image: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(255, 182, 193, 0.15) 10px,
+                    rgba(255, 182, 193, 0.15) 11px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 25px,
+                    rgba(255, 182, 193, 0.1) 25px,
+                    rgba(255, 182, 193, 0.1) 26px
+                ),
+                linear-gradient(135deg, #fefbf8 0%, #fffbfe 100%);
+            background-attachment: fixed, fixed, scroll;
+            background-size: 100% 100%, 100% 100%, 100% 100%;
+            background-position: 0 0, 0 0, 0 0;
+        }
+
+        /* Dekorativní okraj papíru */
+        .letter-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid rgba(255, 182, 193, 0.3);
+            border-radius: 4px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Dekorativní srdce na vrchu papíru */
+        .letter-content::after {
+            content: '❤️';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            z-index: 2;
+        }
+
+        .letter-title {
+            color: #d63384;
+            font-size: clamp(1.3rem, 5vw, 1.8rem);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 1rem;
+            line-height: 1.6;
+            letter-spacing: 0.02em;
+            word-spacing: 0.1em;
+        }
+
+        .letter-text {
+            color: #7d4f7f;
+            font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+            line-height: 1.8;
+            font-weight: 400;
+            position: relative;
+            z-index: 2;
             text-align: center;
         }
-        h1 { 
-            color: #2563eb; 
-            margin-top: 0;
+
+        .letter-decoration {
+            text-align: center;
+            font-size: 0.8rem;
+            color: rgba(255, 105, 180, 0.4);
+            margin-top: 1rem;
+            letter-spacing: 0.3rem;
+            position: relative;
+            z-index: 2;
         }
-        p {
-            font-size: 1.1rem;
-            color: #4b5563;
+
+        /* ======================== FÁZE 3: FOTKY NA POZADÍ ======================== */
+        .background-photo {
+            position: fixed;
+            z-index: 5;
+            /* Papír je na z-index: 20, fotky budou za ním */
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            pointer-events: none;
+        }
+
+        .background-photo.show {
+            opacity: 1;
+        }
+
+        .background-photo img {
+            width: clamp(120px, 35vw, 45vw);
+            height: clamp(120px, 35vw, 45vw);
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.2);
+            border: 2px solid rgba(255, 192, 203, 0.4);
+            transform: rotate(var(--rotation, 0deg));
+        }
+
+        /* ======================== ANIMACE ======================== */
+        @keyframes slideInEnvelope {
+            from {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUpLetter {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) translateY(80px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) translateY(0);
+            }
+        }
+
+        @keyframes fadeOutEnvelope {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInPhotos {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes rotatePhotos {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        /* ======================== RESPONZIVNÍ ÚPRAVY ======================== */
+        @media (max-width: 480px) {
+            body {
+                padding: 0.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Ahoj, tady Adrian! 👋</h1>
-        <p>Toto je moje první testovací stránka nasazená na GitHub Pages.</p>
-        <p>Propojení přes Git funguje skvěle!</p>
+        <!-- ============ FÁZE 1: OBÁLKA ============ -->
+        <div class="envelope-wrapper" id="envelopeWrapper">
+            <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="envelopeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#ffe0ec;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#ffc0db;stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="flapGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#ffb6d9;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#ff99c8;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Tělo obálky -->
+                <rect x="20" y="60" width="260" height="140" fill="url(#envelopeGradient)" stroke="#ff69b4" stroke-width="2" rx="10"/>
+
+                <!-- Přední klapka obálky -->
+                <polygon points="30,60 150,140 270,60" fill="url(#flapGradient)" stroke="#ff69b4" stroke-width="2" stroke-linejoin="round"/>
+
+                <!-- Dekorace - malá srdce -->
+                <circle cx="35" cy="70" r="3" fill="#ff69b4" opacity="0.7"/>
+                <circle cx="265" cy="70" r="3" fill="#ff69b4" opacity="0.7"/>
+                <circle cx="150" cy="155" r="3" fill="#ff69b4" opacity="0.7"/>
+
+                <!-- Středová linka -->
+                <line x1="150" y1="60" x2="150" y2="200" stroke="#ff69b4" stroke-width="1.5" opacity="0.5"/>
+            </svg>
+
+            <!-- Tlačítko na obálce -->
+            <button class="envelope-button" id="envelopeButton">Klikni na mě ❤️</button>
+        </div>
+
+        <!-- ============ FÁZE 2: PAPÍR S VZKAZEM ============ -->
+        <div class="letter-paper" id="letterPaper">
+            <div class="letter-content">
+                <h2 class="letter-title">
+                     Všechno nejlepší, Simonko, k dvacetinám! 🎂
+                </h2>
+                <p class="letter-text">
+                    Přeji hlavně hodně štěstíčka a zdravíčka, moc tě miluji a hrozně se těším, až to spolu více oslavíme.
+                    <br><br>
+                    S láskou, Tomík ❤️
+                </p>
+                <div class="letter-decoration">~ 💕 ~</div>
+            </div>
+        </div>
+
+        <!-- ============ FÁZE 3: FOTKY NA POZADÍ (BUDOU DYNAMICKY VYTVOŘENY) ============ -->
+        <!-- Fotky se budou generovat dynamicky v JavaScriptu -->
     </div>
+
+    <!-- ============ KONFETY CDN ============ -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"></script>
+
+    <!-- ============ APLIKAČNÍ LOGIKA ============ -->
+    <script>
+        // ======================== STAV ========================
+        let clickCount = 0;
+        const maxClicks = 3;
+        let backgroundPhotosActive = false;
+        let backgroundPhotoInterval = null;
+
+        // ======================== ELEMENTY ========================
+        const envelopeWrapper = document.getElementById('envelopeWrapper');
+        const envelopeButton = document.getElementById('envelopeButton');
+        const letterPaper = document.getElementById('letterPaper');
+
+        // ======================== POLE FOTEK - AUTOMATICKÉ NAPLNĚNÍ ========================
+        const photoArray = [];
+        for (let i = 1; i <= 15; i++) {
+            photoArray.push(`images/foto${i}.jpeg`);
+        }
+
+        // ======================== TEXTY TLAČÍTKA ========================
+        const buttonTexts = [
+            'Klikni na mě ❤️',
+            'Klikni na mě znovu 💕',
+            'Klikni na mě naposled! 💖'
+        ];
+
+        // ======================== POSLUCHAČ - KLIKNUTÍ NA OBÁLKU ========================
+        envelopeButton.addEventListener('click', handleEnvelopeClick);
+
+        function handleEnvelopeClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            clickCount++;
+
+            if (clickCount < maxClicks) {
+                // Změní text tlačítka
+                envelopeButton.textContent = buttonTexts[clickCount];
+                playClickSound();
+                animateButtonClick();
+            } else if (clickCount === maxClicks) {
+                // Třetí kliknutí - SPUSTIT SEKVENCI
+                envelopeButton.disabled = true;
+                openEnvelopeSequence();
+            }
+        }
+
+        // ======================== FUNKCE - ANIMACE KLIKNUTÍ ========================
+        function animateButtonClick() {
+            envelopeButton.style.transform = 'translate(-50%, -50%) scale(0.95)';
+            setTimeout(() => {
+                envelopeButton.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 100);
+        }
+
+        // ======================== FUNKCE - SEKVENCE PO TŘETÍM KLIKNUTÍ ========================
+        function openEnvelopeSequence() {
+            // T=0ms: Skryt tlačítko, přidej třídu opened do obálky
+            envelopeButton.style.opacity = '0';
+            envelopeButton.style.pointerEvents = 'none';
+            envelopeWrapper.classList.add('opened');
+
+            // T=100ms: Papír se stal viditelným a začne animaci
+            setTimeout(() => {
+                letterPaper.classList.add('visible');
+            }, 100);
+
+            // T=200ms: Spustit konfety efekt
+            setTimeout(() => {
+                triggerConfetti();
+            }, 200);
+
+            // T=1200ms: Spustit pozadí s fotkami
+            setTimeout(() => {
+                startBackgroundPhotos();
+            }, 1200);
+        }
+
+        // ======================== FUNKCE - NÁHODNÁ POZICE (VYHÝBÁ SE STŘEDU) ========================
+        function getRandomPosition() {
+            const photoSize = Math.max(window.innerWidth * 0.45, 120); // Max velikost fotky
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const excludeRadius = 400; // Poloměr, kde se fotky nehledají (střed obrazovky)
+            
+            let randomX, randomY, distance;
+            
+            // Opakovat, dokud se fotka nevygeneruje mimo střed
+            do {
+                const padding = Math.max(photoSize / 2, 30);
+                const maxX = Math.max(window.innerWidth - photoSize, 0);
+                const maxY = Math.max(window.innerHeight - photoSize, 0);
+                
+                randomX = Math.random() * maxX + padding / 2;
+                randomY = Math.random() * maxY + padding / 2;
+                
+                // Vzdálenost od středu
+                distance = Math.sqrt(
+                    Math.pow(randomX - centerX, 2) + 
+                    Math.pow(randomY - centerY, 2)
+                );
+            } while (distance < excludeRadius); // Opakuj, pokud je příliš blízko středu
+            
+            return { x: randomX, y: randomY };
+        }
+
+        // ======================== FUNKCE - NÁHODNÁ FOTKA Z POLE ========================
+        function getRandomPhoto() {
+            return photoArray[Math.floor(Math.random() * photoArray.length)];
+        }
+
+        // ======================== FUNKCE - ZOBRAZIT JEDNU FOTKU ========================
+        function displayRandomPhoto() {
+            const photoDiv = document.createElement('div');
+            photoDiv.className = 'background-photo';
+            
+            // Náhodný náklon mezi -15 a +15 stupňů
+            const rotation = (Math.random() * 30) - 15;
+            
+            const img = document.createElement('img');
+            img.src = getRandomPhoto();
+            img.alt = 'Naše fotka';
+            img.style.setProperty('--rotation', rotation + 'deg');
+            
+            // Ošetření chyby - pokud fotka neexistuje
+            img.onerror = function() {
+                photoDiv.remove();
+            };
+            
+            const pos = getRandomPosition();
+            photoDiv.style.left = pos.x + 'px';
+            photoDiv.style.top = pos.y + 'px';
+            
+            photoDiv.appendChild(img);
+            document.body.appendChild(photoDiv);
+            
+            // Fade in - začít animaci hned
+            setTimeout(() => {
+                photoDiv.classList.add('show');
+            }, 10);
+            
+            // Fade out po 4 sekundách
+            setTimeout(() => {
+                photoDiv.classList.remove('show');
+                
+                // Smazat element po skončení fade-out animace (0.6s)
+                setTimeout(() => {
+                    photoDiv.remove();
+                }, 600);
+            }, 4000);
+        }
+
+        // ======================== FUNKCE - SPUSTIT ASYNCHRONNÍ FOTKY ========================
+        function startBackgroundPhotos() {
+            if (backgroundPhotosActive) return;
+            
+            backgroundPhotosActive = true;
+            
+            // Spustit hned první fotku
+            displayRandomPhoto();
+            
+            // Poté každých 0.8-1.2 sekundy se objeví nová fotka
+            // Tím se zajistí, že v jeden čas jsou vidět cca 6-8 fotek (4s životnost / 0.8-1.2s interval)
+            backgroundPhotoInterval = setInterval(() => {
+                if (backgroundPhotosActive) {
+                    displayRandomPhoto();
+                }
+            }, 800 + Math.random() * 400);
+        }
+
+        // ======================== FUNKCE - ZASTAVIT FOTKY (VOLITELNÉ) ========================
+        function stopBackgroundPhotos() {
+            backgroundPhotosActive = false;
+            if (backgroundPhotoInterval) {
+                clearInterval(backgroundPhotoInterval);
+                backgroundPhotoInterval = null;
+            }
+        }
+
+        // ======================== FUNKCE - KONFETY ========================
+        function triggerConfetti() {
+            // První vlna - padají dolů
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0 }
+            });
+
+            // Druhá vlna se zpožděním
+            setTimeout(() => {
+                confetti({
+                    particleCount: 50,
+                    spread: 100,
+                    origin: { y: 0.5 }
+                });
+            }, 200);
+
+            // Třetí vlna - z obou stran
+            setTimeout(() => {
+                confetti({
+                    particleCount: 30,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0, y: 0.5 }
+                });
+                confetti({
+                    particleCount: 30,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1, y: 0.5 }
+                });
+            }, 400);
+        }
+
+        // ======================== FUNKCE - ZVUKOVÁ ZPĚTNÁ VAZBA ========================
+        function playClickSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                
+                oscillator.connect(gain);
+                gain.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.1);
+            } catch (e) {
+                // Tiše selhat, pokud Web Audio API není dostupné
+            }
+        }
+
+        // ======================== INICIALIZACE ========================
+        console.log('🎉 Romantický web je připraven!');
+        console.log('💕 Klikni 3x na obálku a sleduj kouzelný efekt...');
+        console.log('📸 Pole fotek:', photoArray);
+    </script>
 </body>
 </html>
