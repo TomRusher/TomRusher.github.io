@@ -436,16 +436,33 @@
             }, 1200);
         }
 
-        // ======================== FUNKCE - NÁHODNÁ POZICE ========================
+        // ======================== FUNKCE - NÁHODNÁ POZICE (NA OKRAJÍCH) ========================
         function getRandomPosition() {
             const padding = 20;
             const photoSize = Math.max(window.innerWidth * 0.45, 120);
+            const edgeMargin = 80; // Šíře pruhů na okrajích
             
-            const maxX = Math.max(window.innerWidth - photoSize - padding, 0);
-            const maxY = Math.max(window.innerHeight - photoSize - padding, 0);
+            let randomX, randomY;
+            const rand = Math.random();
             
-            const randomX = Math.random() * maxX + padding;
-            const randomY = Math.random() * maxY + padding;
+            // Rozdělí obrazovku na 4 zóny - okraje
+            if (rand < 0.25) {
+                // TOP - nahoře
+                randomX = Math.random() * (window.innerWidth - photoSize - padding * 2) + padding;
+                randomY = padding;
+            } else if (rand < 0.5) {
+                // BOTTOM - dole
+                randomX = Math.random() * (window.innerWidth - photoSize - padding * 2) + padding;
+                randomY = window.innerHeight - photoSize - padding;
+            } else if (rand < 0.75) {
+                // LEFT - vlevo
+                randomX = padding;
+                randomY = Math.random() * (window.innerHeight - photoSize - padding * 2) + padding;
+            } else {
+                // RIGHT - vpravo
+                randomX = window.innerWidth - photoSize - padding;
+                randomY = Math.random() * (window.innerHeight - photoSize - padding * 2) + padding;
+            }
             
             return { x: randomX, y: randomY };
         }
